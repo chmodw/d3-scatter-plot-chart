@@ -25,7 +25,7 @@ d3.json(
 
     let time = data.map((item) => {
       let mins = toMinutes(item.Seconds);
-      return new Date(1995, 5, 3, 0, mins[0], mins[1]);
+      return new Date(Date.UTC(1995, 5, 3, 0, mins[0], mins[1]));
     });
 
     let yScale = d3
