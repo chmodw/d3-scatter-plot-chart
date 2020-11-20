@@ -15,21 +15,23 @@ d3.json(
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json"
 )
   .then((data) => {
-    let years = data.map((item) => item.Year);
-
-    let seconds = data.map((item) => item.Seconds);
-
     let xScale = d3
       .scaleLinear()
-      .domain([d3.min(years), d3.max(years)])
+      .domain([
+        d3.min(data.map((item) => item.Year - 1)),
+        d3.max(data.map((item) => item.Year + 1)),
+      ])
       .range([0, width]);
 
-    var yScale = d3
-      .scaleLinear()
-      .domain([d3.min(seconds), d3.max(seconds)])
-      .range([height, 0]);
+    let time = data.map((item) => {
+      let mins = toMinutes(item.Seconds);
+      return new Date(1995, 5, 3, 0, mins[0], mins[1]);
+    });
 
-    var yAxis = d3.axisLeft(yScale);
+    let yScale = d3
+      .scaleTime()
+      .range([0, height])
+      .domain([d3.min(time), d3.max(time)]);
 
     svg
       .append("g")
@@ -39,7 +41,7 @@ d3.json(
 
     svg
       .append("g")
-      .call(yAxis)
+      .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat("%M:%S")))
       .attr("id", "y-axis")
       .attr("transform", "translate(60, 50)");
   })
@@ -47,10 +49,10 @@ d3.json(
     if (error) throw error;
   });
 
-//convert seconds to minutes -> [mm:ss, mm:ss, mm:ss]
+//convert seconds to minutes -> [mm,ss]
 function toMinutes(seconds) {
   let secs = seconds % 60;
-  let mins = seconds - secs / 60;
+  let mins = (seconds - secs) / 60;
 
-  return mins + ":" + secs;
+  return [mins, secs];
 }
