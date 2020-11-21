@@ -58,6 +58,8 @@ d3.json(
       .attr("cx", (d) => xScale(d.Year) + 60)
       .attr("cy", (d) => yScale(timeParser(d.Seconds)) + 50)
       .attr("r", 7)
+      .attr("data-xvalue", (d) => d.Year)
+      .attr("data-yvalue", (d) => timeParser(d.Seconds).toISOString())
       .style("stroke", "black")
       .style("fill", (d) => color(d.Doping !== ""))
       .style("opacity", 0.7)
@@ -73,7 +75,10 @@ d3.json(
         d3.select("#tooltip-allegation").text(d.Doping);
       })
       .on("mouseout", function () {
-        d3.select("#tooltip").style("opacity", 0);
+        d3.select("#tooltip")
+          .style("opacity", 0)
+          .style("top", 0)
+          .style("left", 0);
       });
 
     // adding label to the y axis
@@ -86,6 +91,42 @@ d3.json(
       .attr("dy", "1.2em")
       .style("text-anchor", "middle")
       .text("Time in Minutes");
+
+    // Adding the legend
+    let legend = svg
+      .append("g")
+      .attr("id", "legend")
+      .selectAll("#legend")
+      .data(color.domain())
+      .enter()
+      .append("g")
+      .attr("class", "legend-label")
+      .attr("transform", function (d, i) {
+        return "translate(0," + (height / 2 - i * 20) + ")";
+      });
+
+    // Adding the legend rectangles
+    legend
+      .append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+    // Adding the legend text
+    legend
+      .append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function (d) {
+        if (d) {
+          return "Riders with doping allegations";
+        } else {
+          return "No doping allegations";
+        }
+      });
   })
   .catch((error) => {
     if (error) throw error;
