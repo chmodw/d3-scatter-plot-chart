@@ -15,6 +15,7 @@ d3.json(
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json"
 )
   .then((data) => {
+    // Adding X axis
     let xScale = d3
       .scaleLinear()
       .domain([
@@ -23,6 +24,13 @@ d3.json(
       ])
       .range([0, width]);
 
+    svg
+      .append("g")
+      .call(d3.axisBottom(xScale).tickFormat((d) => d))
+      .attr("id", "x-axis")
+      .attr("transform", "translate(60, 450)");
+
+    // Adding Y axis
     let time = data.map((item) => {
       let mins = toMinutes(item.Seconds);
       return new Date(Date.UTC(1995, 5, 3, 0, mins[0], mins[1]));
@@ -35,15 +43,21 @@ d3.json(
 
     svg
       .append("g")
-      .call(d3.axisBottom(xScale).tickFormat((d) => d))
-      .attr("id", "x-axis")
-      .attr("transform", "translate(60, 450)");
-
-    svg
-      .append("g")
       .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat("%M:%S")))
       .attr("id", "y-axis")
       .attr("transform", "translate(60, 50)");
+
+    // Adding Dots
+    svg
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("cx", (d) => xScale(d.Year) + 60)
+      .attr("cy", (d, i) => yScale(time[i]) + 50)
+      .attr("r", 5)
+      .style("fill", "#69b3a2");
   })
   .catch((error) => {
     if (error) throw error;
