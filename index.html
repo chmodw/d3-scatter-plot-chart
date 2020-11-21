@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>D3 scatter plot chart</title>
     <link href="styles.css" rel="stylesheet" />
-    <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
   </head>
   <body>
-    <div id="chart-container"></div>
+    <div id="chart-container">
+      <h1 id="title">Doping in Professional Bicycle Racing</h1>
+      <p id="sub-title">35 Fastest times up Alpe d'Huez</p>
+      <div id="tooltip">
+        <div>
+          <p id="tooltip-name"></p>
+          :
+          <p id="tooltip-country"></p>
+        </div>
+        <div>
+          <p id="tooltip-year"></p>
+          :
+          <p id="tooltip-time"></p>
+        </div>
+        <p id="tooltip-allegation"></p>
+      </div>
+      <g id="legend"></g>
+    </div>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="js.js"></script>
   </body>
