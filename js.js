@@ -15,6 +15,10 @@ d3.json(
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json"
 )
   .then((data) => {
+    // Adding date property to the data object
+
+    data.forEach((item) => {});
+
     // Adding X axis
     let xScale = d3
       .scaleLinear()
@@ -137,5 +141,5 @@ function timeParser(seconds) {
   let secs = seconds % 60;
   let mins = (seconds - secs) / 60;
 
-  return new Date(Date.UTC(1995, 5, 3, 0, mins, secs));
+  return new Date(1995, 5, 3, 0, mins, secs);
 }
