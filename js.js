@@ -1,15 +1,15 @@
-// let margin = { top: 10, right: 30, bottom: 30, left: 60 };
-let width = 800;
-let height = 400;
+let margin = { top: 10, right: 30, bottom: 30, left: 60 };
+let width = 860 - margin.left - margin.right;
+let height = 600 - margin.top - margin.bottom;
 
 var svg = d3
   .select("#chart-container")
   .append("svg")
   .attr("id", "chart")
-  .attr("width", width + 150)
-  .attr("height", height + 100)
-  .attr("padding", 20)
-  .append("g");
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.json(
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json"
@@ -28,7 +28,7 @@ d3.json(
       .append("g")
       .call(d3.axisBottom(xScale).tickFormat((d) => d))
       .attr("id", "x-axis")
-      .attr("transform", "translate(60, 450)");
+      .attr("transform", "translate(0," + height + ")");
 
     // Adding Y axis
     let yScale = d3
@@ -42,8 +42,7 @@ d3.json(
     svg
       .append("g")
       .call(d3.axisLeft(yScale).tickFormat(d3.timeFormat("%M:%S")))
-      .attr("id", "y-axis")
-      .attr("transform", "translate(60, 50)");
+      .attr("id", "y-axis");
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -55,8 +54,8 @@ d3.json(
       .enter()
       .append("circle")
       .attr("class", "dot")
-      .attr("cx", (d) => xScale(d.Year) + 60)
-      .attr("cy", (d) => yScale(timeParser(d.Seconds)) + 50)
+      .attr("cx", (d) => xScale(d.Year))
+      .attr("cy", (d) => yScale(timeParser(d.Seconds)))
       .attr("r", 7)
       .attr("data-xvalue", (d) => d.Year)
       .attr("data-yvalue", (d) => timeParser(d.Seconds).toISOString())
@@ -65,6 +64,7 @@ d3.json(
       .style("opacity", 0.7)
       .on("mouseover", (e, d) => {
         d3.select("#tooltip")
+          .attr("data-year", d.Year)
           .style("opacity", 0.9)
           .style("top", yScale(timeParser(d.Seconds)) + 100 + "px")
           .style("left", xScale(d.Year) + 130 + "px");
@@ -86,8 +86,8 @@ d3.json(
       .append("text")
       .attr("id", "y-axis-label")
       .attr("transform", "rotate(-90)")
-      .attr("y", -2)
-      .attr("x", 0 - height / 2)
+      .attr("y", -60)
+      .attr("x", 0 - height / 2 + 100)
       .attr("dy", "1.2em")
       .style("text-anchor", "middle")
       .text("Time in Minutes");
@@ -108,7 +108,7 @@ d3.json(
     // Adding the legend rectangles
     legend
       .append("rect")
-      .attr("x", width - 18)
+      .attr("x", width - 205)
       .attr("width", 18)
       .attr("height", 18)
       .style("fill", color);
@@ -116,10 +116,10 @@ d3.json(
     // Adding the legend text
     legend
       .append("text")
-      .attr("x", width - 24)
+      .attr("x", width - 180)
       .attr("y", 9)
       .attr("dy", ".35em")
-      .style("text-anchor", "end")
+      .style("text-anchor", "start")
       .text(function (d) {
         if (d) {
           return "Riders with doping allegations";
