@@ -58,7 +58,7 @@ d3.json(
       .attr("cy", (d) => yScale(timeParser(d.Seconds)))
       .attr("r", 7)
       .attr("data-xvalue", (d) => d.Year)
-      .attr("data-yvalue", (d) => timeParser(d.Seconds).toISOString())
+      .attr("data-yvalue", (d) => timeParser(d.Seconds))
       .style("stroke", "black")
       .style("fill", (d) => color(d.Doping !== ""))
       .style("opacity", 0.7)
@@ -78,7 +78,7 @@ d3.json(
         d3.select("#tooltip")
           .style("opacity", 0)
           .style("top", 0)
-          .style("left", 0);
+          .style("right", 0);
       });
 
     // adding label to the y axis
